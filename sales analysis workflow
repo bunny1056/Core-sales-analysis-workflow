@@ -1,0 +1,80 @@
+import pandas as pd
+
+# Load Walmart sales data
+df = pd.read_csv("walmart_sales.csv")
+
+# Basic information
+print(df.info())
+
+# Total sales
+total_sales = df["sales"].sum()
+print("Total Sales:", total_sales)
+
+# Top-selling products
+top_products = (
+    df.groupby("product")["sales"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print("\nTop Products:")
+print(top_products)
+
+# Sales by region
+region_sales = (
+    df.groupby("region")["sales"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+print("\nSales by Region:")
+print(region_sales)
+
+# Branch performance
+branch_sales = (
+    df.groupby("branch")
+    .agg(
+        total_sales=("sales", "sum"),
+        avg_sales=("sales", "mean"),
+        transactions=("sales", "count")
+    )
+    .sort_values("total_sales", ascending=False)
+)
+
+print("\nBranch Performance:")
+print(branch_sales)
+
+# Customer trends
+customer_sales = (
+    df.groupby("customer_type")["sales"]
+    .mean()
+)
+
+print("\nCustomer Trends:")
+print(customer_sales)
+
+# Profitability
+profitability = (
+    df.groupby("product")
+    .agg(
+        revenue=("sales", "sum"),
+        profit=("profit", "sum")
+    )
+    .sort_values("profit", ascending=False)
+)
+
+print("\nProduct Profitability:")
+print(profitability.head(10))
+
+# Monthly sales trend
+df["date"] = pd.to_datetime(df["date"])
+df["month"] = df["date"].dt.to_period("M")
+
+monthly_sales = (
+    df.groupby("month")["sales"]
+    .sum()
+)
+
+print("\nMonthly Sales:")
+print(monthly_sales)

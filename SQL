@@ -1,0 +1,18 @@
+-- Top-selling products
+SELECT
+    product,
+    SUM(sales) AS total_sales
+FROM walmart_sales
+GROUP BY product
+ORDER BY total_sales DESC
+LIMIT 10;
+
+-- Branch performance
+SELECT
+    branch,
+    SUM(sales) AS revenue,
+    AVG(sales) AS average_sale,
+    COUNT(*) AS transactions
+FROM walmart_sales
+GROUP BY branch
+ORDER BY revenue DESC;
